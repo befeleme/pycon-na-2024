@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>AoC! Python!</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+		<section data-background-image="header-bg-ff.4c80e82684c4.svg" data-transition="none" >
+			<!-- ="rgb(3, 12, 208)" -->
+			<!-- 57, 244, 197 -->
+			<!-- https://cz.pycon.org/static/img/logo-pycon-23.min.c7055641a6d9.svg -->
+			<h2 font-family="Source Code Pro">
+				Beyond the basics <br>with Advent of Code
+			</h2><br><br>
+				<pre>
+Karolina Surma
+PyLadies Czech Republic</pre>
+		</section>
+
+		<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+			<a href="https://adventofcode.com/">https://adventofcode.com/</a><br>
+			<img src="aoc.png" width="600">
+		</section>
+
+		<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+			<pre>Python, Excel or Minecraft?</pre>
+			<pre class="fragment">input data -> algorithm -> the result</pre>
+			<pre class="fragment">algorithm optimization for the 2nd puzzle</pre>
+		</section>
+
+		<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+			<a href="https://docs.python.org/">https://docs.python.org/</a><br>
+			<img src="docs.png" width="600">
+		</section>
+
+		<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+			<pre><code class="language-python" data-trim >
+				>>> from math import pi
+				>>> from turtle import forward, left, right
+				>>> import this
+				</code></pre>
+		</section>
+
+		<section>
+		<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<img src="octopus.png" height="600">
+		</section>
+		<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<pre><code class="language-python" data-trim data-line-numbers="1-3|5-11">
+			# position: tuple (x, y) - dictionary key
+			# luminosity: number value
+			octo_field = {(0, 0): 6, (1, 0): 3, ..., (9, 9): 8}
+			
+			# who are the neighbors of the octopus sitting on (3, 4)?
+			# x + delta_x, y + delta_y
+			neighbor_deltas = [
+				(-1, -1), (-1, 0), (-1, 1),
+				(0, -1), (0, 1),
+				(1, 1), (1, 0), (1, -1),
+			]
+		</code></pre>
+		</section>	
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+	<table>
+		<tr>
+			<td><pre class="fragment">3D (x, y, z)</pre></td>
+			<td><pre class="fragment" style="color:rgb(255, 0, 229)">26 neighbors</pre></td>
+		</tr>
+		<tr>
+			<td><pre class="fragment">4D (x, y, z, w)</pre></td>
+			<td><pre class="fragment" style="color:rgb(255, 0, 229)">80 neighbors</pre></td>
+		</tr>
+	</table>
+
+	<p class="fragment">&#x1F62D;</p>
+	</section>	
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<h2>There has to be better way!</h2>
+	</section>
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="zoom-in fade-out" >
+		<code>from itertools import product</code><br>
+		<img src="combinatorics.png">
+		</section>				
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<pre><code class="language-python" data-trim data-line-numbers="1|3-4|6-7|9-11|12-13"><script type="text/template">
+			>>> from itertools import product
+
+			>>> product([-1, 0, 1], repeat=3)
+			<itertools.product object at 0x7fd1df63fdc0>
+			
+			>>> list(product([-1, 0, 1], repeat=3))
+			[(-1, -1, -1), (-1, -1, 0), (-1, -1, 1), ...]
+			
+			>>> list(product(range(-1, 2), repeat=4))
+			[(-1, -1, -1, -1), (-1, -1, -1, 0), (-1, -1, -1, 1), ...]
+			
+			>>> len(list(product(range(-1, 2), repeat=4)))
+			81
+			</script></code></pre><br>
+	</section>
+
+</section>
+
+<section>
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<img src="jean-wimmerlin.jpg" width="800">
+	</section>
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<pre><code class="language-python" data-trim data-line-numbers="1-2|3-7"><script type="text/template">
+			# key: age, value: fish count
+			>>> lanternfish = {0: 45, 1: 235, 2: 534, 99: 3,}
+			>>> total = 0
+			>>> for fish_count in lanternfish.values():
+			... 	total += fish_count
+			>>> total
+			817
+		</script></code></pre>
+	</section>
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<pre><code class="language-python" data-trim data-line-numbers="8-9"><script type="text/template">
+			# key: age, value: fish count
+			>>> lanternfish = {0: 45, 1: 235, 2: 534, 99: 3,}
+			>>> total = 0
+			>>> for fish_count in lanternfish.values():
+			... 	total += fish_count
+			>>> total
+			817
+			>>> max(lanternfish.values())
+			534
+		</script></code></pre>
+	</section>
+	
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<pre><code class="language-python" data-trim data-line-numbers="10-14"><script type="text/template">
+			# key: age, value: fish count
+			>>> lanternfish = {0: 45, 1: 235, 2: 534, 99: 3,}
+			>>> total = 0
+			>>> for fish_count in lanternfish.values():
+			... 	total += fish_count
+			>>> total
+			817
+			>>> max(lanternfish.values())
+			534
+			>>> lanternfish[105]
+			Traceback (most recent call last):
+			File "<stdin>", line 1, in <module>
+			KeyError: 105
+		</script></code></pre>
+	</section>
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<h2>There has to be better way!</h2>
+	</section>
+	<section data-background-color="rgb(15, 15, 35)" data-transition="zoom-in fade-out" >
+		<code>from collections import Counter</code><br><br>
+		<pre>class collections.Counter([iterable-or-mapping])
+
+most_common([n])
+	Return a list of the n most common elements.
+
+total()
+	Compute the sum of the counts.
+		</pre>
+	</section>
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none">
+		<pre><code class="language-python" data-line-numbers="1-3|4-5|6-7|8-9" data-trim>
+			>>> from collections import Counter
+			>>> lanternfish = {0: 45, 1: 235, 2: 534, 99: 3,}
+			>>> c = Counter(lanternfish)
+			>>> c.total()
+			817
+			>>> c.most_common(1)
+			[(2, 534)]
+			>>> c[105]
+			0
+		</code></pre>
+	</section>
+</section>
+<section>
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<img src="4246197315_871b479b0e_b.jpg" width="600"><br>
+
+	</section>
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<pre><code class="language-bash" data-trim>
+			mem[45673] = 370803
+			mem[322] = 92667525
+		</code></pre>
+	</section>
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<pre><code class="language-python" data-trim>
+			# mem[45673] = 370803
+			>>> left = line[line.index("[")+1:line.index("]")]
+			>>> right = line[line.index("=")+2:]
+		</code></pre>
+	</section>
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="zoom-in fade-out" >
+		<code>import re</code><br>
+		<img src="regular_expressions.png">
+		<pre class="fragment">
+"Regular Expression HOWTO"<br>
+<a href="https://docs.python.org/3/howto/regex.html#regex-howto">https://docs.python.org/3/howto/regex.html#regex-howto</a></pre>
+	</section>
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+	<pre><code class="language-python" data-trim>
+		# mem[45673] = 370803
+		>>> left = line[line.index("[")+1:line.index("]")]
+		>>> right = line[line.index("=")+2:]
+		# vs
+		>>> pattern = r"mem\[(\d+)\] = (\d+)"
+	</code></pre>
+	</section>
+</section>
+
+<section>
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<img src="animals.jpg" width="800px"><br>
+	</section>
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<pre><code class="language-python" data-line-numbers="1|1-2|1-3" data-trim>
+			>>> source_data = ["dog", "mouse", "guinea pig"]
+			>>> modified_data = source_data
+			>>> modified_data.remove("guinea pig")				
+		</code></pre>
+	</section>
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<pre><code class="language-python" data-line-numbers="4-5" data-trim>
+			>>> source_data = ["dog", "mouse", "guinea pig"]
+			>>> modified_data = source_data
+			>>> modified_data.remove("guinea pig")
+			>>> source_data
+			['dog', 'mouse']
+		</code></pre>
+	</section>
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<pre><code class="language-python" data-line-numbers="2,6-9" data-trim>
+			>>> source_data = ["dog", "mouse", "guinea pig"]
+			>>> modified_data = source_data
+			>>> modified_data.remove("guinea pig")
+			>>> source_data
+			['dog', 'mouse']
+			>>> id(source_data)
+			140539371492416
+			>>> id(modified_data)
+			140539371492416			
+		</code></pre>
+	</section>
+
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="zoom-in fade-out" >
+		<code>import copy</code><br><br>
+		<pre>copy.copy(x)
+	Return a shallow copy of x.
+
+copy.deepcopy(x[, memo])
+	Return a deep copy of x.
+</pre>
+	</section>
+
+	<section data-background-color="rgb(15, 15, 35)" data-transition="none" >
+		<pre><code class="language-python" data-line-numbers="1-3|4-6|7-12" data-trim>
+			>>> import copy
+			>>> source_data = ["dog", "mouse", "guinea pig"]
+			>>> modified_data = copy.deepcopy(source_data)
+			>>> modified_data.remove("guinea pig")
+			>>> source_data
+			['dog', 'mouse', 'guinea pig']
+			>>> id(modified_data)
+			140539371493568
+			>>> id(source_data)
+			140539372998400
+		</code></pre>
+	</section>
+</section>
+
+	<section data-background-color="rgb(15, 15, 35)">
+		<img src="qrcode.png" align="right">
+<pre>itertools<br>
+collections<br>
+re<br>
+copy<br><br><br>
+		<a href="https://befeleme.github.io/pycon-na-24/">https://befeleme.github.io/pycon-na-24/</a>
+</pre>
+	</section>
+
+	<section data-background-color="rgb(15, 15, 35)">
+		<h2>Sources</h2>
+		<pre>octopus - mindful_meerkat, source: <a href="https://www.reddit.com/r/adventofcode/comments/rdwebv/2021_day_11_dumbo_octopus_flashes/">reddit</a></pre>
+		<pre>animals - storebukkebruse, license: <a href="https://creativecommons.org/licenses/by/2.0/?ref=openverse">CC BY 2.0</a></pre>
+		<pre>fish - Jean Wimmerlin, license: Unsplash</pre>
+		<pre>burgundy patterns - webtreats, license: <a href="https://creativecommons.org/licenses/by/2.0/?ref=openverse">CC BY 2.0</a></pre>
+		<pre>regular expressions - <a href="https://xkcd.com/208/">XKCD</a>, license: <a href="https://creativecommons.org/licenses/by-nc/2.5/">CC BY-NC 2.5</a></pre>
+		</section>
+
+</div>
+</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
